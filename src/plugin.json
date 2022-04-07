@@ -1,10 +1,10 @@
 {
   "$schema": "https://raw.githubusercontent.com/grafana/grafana/master/docs/sources/developers/plugins/plugin.schema.json",
   "type": "panel",
-  "name": "test-panel-plugin",
-  "id": "codingtown-test-panel-plugin",
+  "name": "ris-gauge-panel-plugin",
+  "id": "ris-gauge-panel-plugin",
   "info": {
-    "description": "jsut create new panel",
+    "description": "just create new panel",
     "author": {
       "name": "Ragu Subramaniyam",
       "url": ""

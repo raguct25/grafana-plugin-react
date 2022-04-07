@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { PanelProps } from '@grafana/data';
 import { SimpleOptions } from 'types';
 import ReactSpeedometer from 'react-d3-speedometer';
+import { METER_VALUES } from 'config/constant';
 
 interface Props extends PanelProps<SimpleOptions> {}
 
-export const SimplePanel: React.FC<Props> = ({ options, data }) => {
+export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) => {
   const [needleValue, setNeedleValue] = useState(0);
   const [m2mValue, setM2mValue] = useState(1000);
   const [contaminationValue, setContaminationValue] = useState(2000);
@@ -22,28 +23,31 @@ export const SimplePanel: React.FC<Props> = ({ options, data }) => {
     setOpenLoopValue(openLoop);
   }, [data]);
 
-  const styles = {
-    dial: {
-      display: 'inline-block',
-      width: `300px`,
-      height: `auto`,
-      color: '#000',
-      padding: '2px',
-    },
+  const isNegativeNeedleValue = () => {
+    if (needleValue > METER_VALUES.idle) {
+      return needleValue;
+    } else {
+      return METER_VALUES.min;
+    }
   };
+
   return (
     <div>
-      <div style={styles.dial}>
-        <ReactSpeedometer
-          value={needleValue}
-          minValue={2}
-          maxValue={10000}
-          segments={4}
-          segmentColors={['#B03A2E', '#148F77', '#B7950B', '#B03A2E']}
-          customSegmentStops={[2, m2mValue, contaminationValue, openLoopValue, 10000]}
-          forceRender={true}
-        />
-      </div>
+      <ReactSpeedometer
+        value={needleValue > METER_VALUES.max ? METER_VALUES.max : isNegativeNeedleValue()}
+        minValue={METER_VALUES.min}
+        maxValue={METER_VALUES.max}
+        segments={METER_VALUES.segments}
+        segmentColors={METER_VALUES.segementColors}
+        customSegmentStops={[METER_VALUES.min, m2mValue, contaminationValue, openLoopValue, METER_VALUES.max]}
+        forceRender={true}
+        currentValueText={needleValue > METER_VALUES.idle ? `${needleValue} Ω` : '-'}
+        needleColor={METER_VALUES.needleColor}
+        needleHeightRatio={METER_VALUES.needleHeight}
+        width={width}
+        height={height}
+        textColor={METER_VALUES.labelColor}
+      />
     </div>
   );
 };
